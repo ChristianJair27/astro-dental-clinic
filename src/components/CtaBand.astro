@@ -1,0 +1,22 @@
+---
+import { site } from '../config/site';
+import { whatsappHref, telHref } from '../lib/links';
+import Icon from './Icon.astro';
+---
+
+<section class="bg-brand-900 py-14 text-white" data-section="cta">
+  <div class="container-page flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
+    <div>
+      <h2 class="text-2xl font-bold sm:text-3xl">{site.cta.heading}</h2>
+      <p class="mt-2 text-brand-100">{site.cta.sub}</p>
+    </div>
+    <div class="flex flex-col gap-3 sm:flex-row">
+      <a href={whatsappHref()} target="_blank" rel="noopener" class="btn bg-whatsapp text-white hover:bg-whatsapp-hover">
+        <Icon name="whatsapp" class="size-5" /> WhatsApp
+      </a>
+      <a href={telHref} class="btn bg-white text-brand-900 hover:bg-brand-50">
+        <Icon name="phone" class="size-5" /> Llamar
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../config/site';
+import { whatsappHref } from '../lib/links';
+---
+
+<Base title={`Página no encontrada | ${site.name}`} description="La página que buscas no existe." noindex>
+  <Header />
+  <main id="main" class="container-page py-24 text-center">
+    <p class="text-sm font-semibold text-brand-800">Error 404</p>
+    <h1 class="mt-2 text-4xl font-bold text-brand-900">Esta página no existe</h1>
+    <p class="mt-4 text-muted">Puede que el enlace esté mal escrito o que la página se haya movido.</p>
+    <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+      <a href="/" class="btn bg-brand-700 text-white hover:bg-brand-800">Ir al inicio</a>
+      <a href={whatsappHref()} target="_blank" rel="noopener" class="btn bg-white text-brand-800 ring-1 ring-brand-200 hover:bg-brand-50">Escríbenos por WhatsApp</a>
+    </div>
+  </main>
+  <Footer />
+</Base>

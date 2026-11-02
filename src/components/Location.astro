@@ -1,0 +1,67 @@
+---
+import { site } from '../config/site';
+import { mapsEmbedSrc, mapsSearchHref, telHref, mailHref } from '../lib/links';
+import Icon from './Icon.astro';
+
+const { address } = site;
+---
+
+<section id="ubicacion" class="bg-brand-50 py-16 md:py-24" data-section="location">
+  <div class="container-page grid gap-8 md:grid-cols-2">
+    <div>
+      <h2 class="text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">Ubicación y horario</h2>
+      <address class="mt-6 space-y-4 not-italic text-ink">
+        <p class="flex gap-3">
+          <Icon name="pin" class="mt-0.5 size-5 shrink-0 text-brand-600" />
+          <span>{address.street}<br />{address.locality}, {address.region} {address.postalCode}</span>
+        </p>
+        <p class="flex gap-3">
+          <Icon name="phone" class="mt-0.5 size-5 shrink-0 text-brand-600" />
+          <a class="underline-offset-2 hover:underline" href={telHref}>{site.phone}</a>
+        </p>
+        <p class="flex gap-3">
+          <Icon name="mail" class="mt-0.5 size-5 shrink-0 text-brand-600" />
+          <a class="underline-offset-2 hover:underline" href={mailHref}>{site.email}</a>
+        </p>
+      </address>
+      <table class="mt-6 w-full max-w-sm text-left text-ink">
+        <caption class="sr-only">Horario de atención</caption>
+        <tbody>
+          {
+            site.hours.map((h) => (
+              <tr class="border-b border-brand-100">
+                <th scope="row" class="py-2 font-medium">{h.days}</th>
+                <td class="py-2 text-right">{h.open} – {h.close}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      <p class="mt-4 text-sm text-muted">{site.hoursNote}</p>
+      <p class="mt-2 flex gap-2 text-sm text-muted"><Icon name="car" class="size-5 shrink-0 text-brand-700" />{site.parking}</p>
+    </div>
+
+    <!-- Mapa con "facade": el iframe de Google Maps solo se carga al hacer clic (rendimiento + privacidad). -->
+    <div class="relative min-h-72 overflow-hidden rounded-3xl bg-brand-100 ring-1 ring-brand-100" id="map-box">
+      <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center">
+        <Icon name="pin" class="size-10 text-brand-700" />
+        <button type="button" id="load-map" class="btn bg-white text-brand-700 shadow-sm hover:bg-brand-50">Ver mapa interactivo</button>
+        <a href={mapsSearchHref} target="_blank" rel="noopener" class="text-sm font-medium text-brand-900 underline underline-offset-2">Abrir en Google Maps</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script define:vars={{ mapsEmbedSrc, title: `Mapa de ${site.name}` }}>
+  document.getElementById('load-map')?.addEventListener('click', () => {
+    const box = document.getElementById('map-box');
+    if (!box) return;
+    const iframe = document.createElement('iframe');
+    iframe.src = mapsEmbedSrc;
+    iframe.title = title;
+    iframe.loading = 'lazy';
+    iframe.referrerPolicy = 'no-referrer-when-downgrade';
+    iframe.className = 'absolute inset-0 h-full w-full border-0';
+    box.replaceChildren(iframe);
+  });
+</script>

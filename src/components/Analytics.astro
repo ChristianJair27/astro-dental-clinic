@@ -1,0 +1,28 @@
+---
+// GA4 (+ Google Ads opcional). Si PUBLIC_GA4_ID está vacío no se carga ningún script de Google.
+const gaId = import.meta.env.PUBLIC_GA4_ID ?? '';
+const adsId = import.meta.env.PUBLIC_ADS_ID ?? '';
+const tagId = gaId || adsId;
+---
+
+{
+  tagId && (
+    <>
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${tagId}`} />
+      <script is:inline define:vars={{ gaId, adsId }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        if (gaId) gtag('config', gaId);
+        if (adsId) gtag('config', adsId);
+      </script>
+    </>
+  )
+}
+
+<script>
+  import '../lib/analytics';
+</script>

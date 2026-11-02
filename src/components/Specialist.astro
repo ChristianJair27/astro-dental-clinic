@@ -1,0 +1,51 @@
+---
+import { Image } from 'astro:assets';
+import { site } from '../config/site';
+import photo from '../assets/especialista.png';
+import Icon from './Icon.astro';
+
+const { specialist: s } = site;
+---
+
+<section id="especialista" class="bg-brand-50 py-16 md:py-24" data-section="specialist">
+  <div class="container-page grid items-center gap-10 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:gap-14">
+    <div class="mx-auto w-full max-w-sm">
+      <Image
+        src={photo}
+        alt={s.photoAlt}
+        widths={[320, 480, 640]}
+        sizes="(min-width: 768px) 384px, calc(100vw - 2rem)"
+        loading="lazy"
+        class="aspect-[4/5] h-auto w-full rounded-3xl object-cover shadow-sm ring-1 ring-brand-100"
+      />
+    </div>
+    <div>
+      <p class="text-sm font-semibold tracking-wide text-brand-800 uppercase">Quién te atiende</p>
+      <h2 class="section-title mt-2">{s.name}</h2>
+      <p class="mt-2 text-lg text-muted">{s.title} · {s.specialty}</p>
+
+      <dl class="mt-6 grid gap-3 sm:grid-cols-2">
+        <div class="rounded-2xl bg-white p-4 ring-1 ring-brand-100">
+          <dt class="text-sm text-muted">Cédula profesional</dt>
+          <dd class="mt-1 font-bold text-brand-900" data-testid="cedula">{s.cedulaProfesional}</dd>
+        </div>
+        {
+          s.cedulaEspecialidad && (
+            <div class="rounded-2xl bg-white p-4 ring-1 ring-brand-100">
+              <dt class="text-sm text-muted">Cédula de especialidad</dt>
+              <dd class="mt-1 font-bold text-brand-900">{s.cedulaEspecialidad}</dd>
+            </div>
+          )
+        }
+      </dl>
+
+      <div class="mt-6 space-y-3 text-ink">
+        {s.bio.map((p) => <p>{p}</p>)}
+      </div>
+      <ul class="mt-6 space-y-2 text-muted">
+        <li class="flex gap-2"><Icon name="file" class="mt-0.5 size-5 shrink-0 text-brand-700" />{s.school}</li>
+        {s.credentials.map((c) => <li class="flex gap-2"><Icon name="check" class="mt-0.5 size-5 shrink-0 text-brand-700" />{c}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,31 @@
+{
+  "name": "consultorio-astro",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "playwright test",
+    "preview:php": "php -S 127.0.0.1:8791 -t dist scripts/php-router.php",
+    "og": "node scripts/og.mjs",
+    "images": "node scripts/images.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/figtree": "^5.3.0",
+    "@tailwindcss/vite": "^4.1.0",
+    "astro": "^5.18.0",
+    "tailwindcss": "^4.1.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@playwright/test": "^1.55.0",
+    "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "vite": "^6.4.5"
+  }
+}

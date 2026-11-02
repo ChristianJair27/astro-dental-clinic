@@ -1,0 +1,44 @@
+---
+import { site } from '../config/site';
+import Icon from './Icon.astro';
+
+const initials = (name: string) =>
+  name
+    .split(/\s+/)
+    .map((p) => p[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+---
+
+<section id="opiniones" class="py-16 md:py-24" data-section="testimonials">
+  <div class="container-page">
+    <h2 class="section-title">Lo que dicen nuestros pacientes</h2>
+    {site.testimonialsAreExamples && <p class="mt-3 text-sm text-muted" data-testid="testimonials-demo">Testimonios de ejemplo: se reemplazan por opiniones reales con autorización del paciente.</p>}
+    <ul class="mt-10 grid gap-5 md:grid-cols-3">
+      {
+        site.testimonials.map((t) => (
+          <li>
+            <figure class="flex h-full flex-col rounded-3xl bg-white p-6 shadow-sm ring-1 ring-brand-100">
+              <div class="flex gap-0.5 text-accent-500" role="img" aria-label="5 de 5 estrellas">
+                {[1, 2, 3, 4, 5].map(() => <Icon name="star" class="size-5" />)}
+              </div>
+              <blockquote class="mt-4 flex-1 text-ink">
+                <p>“{t.quote}”</p>
+              </blockquote>
+              <figcaption class="mt-6 flex items-center gap-3">
+                <span aria-hidden="true" class="inline-flex size-10 items-center justify-center rounded-full bg-brand-100 text-sm font-bold text-brand-800">
+                  {initials(t.name)}
+                </span>
+                <span>
+                  <span class="block font-semibold text-brand-900">{t.name}</span>
+                  <span class="block text-sm text-muted">{t.role}</span>
+                </span>
+              </figcaption>
+            </figure>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

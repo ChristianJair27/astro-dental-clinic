@@ -1,0 +1,29 @@
+---
+// Aviso de privacidad simplificado (LFPDPPP). PLANTILLA: el texto final lo valida el cliente o su asesor legal.
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../config/site';
+
+const p = site.privacy;
+---
+
+<Base title={`Aviso de privacidad | ${site.name}`} description={`Aviso de privacidad de ${site.name}: qué datos recabamos y para qué los usamos.`}>
+  <Header />
+  <main id="main" class="container-page max-w-3xl py-16">
+    <h1 class="section-title">Aviso de privacidad</h1>
+    <p class="mt-2 text-sm text-muted">Última actualización: {p.updated}</p>
+    <div class="mt-8 space-y-5 text-ink [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-brand-900">
+      <p><strong>{p.responsible}</strong>, con domicilio en {site.address.street}, {site.address.locality}, {site.address.region}, es responsable del tratamiento de tus datos personales.</p>
+      <h2>Datos que recabamos</h2>
+      <p>Nombre, teléfono, correo electrónico (opcional), tratamiento de interés, horario preferido y el motivo de consulta que decidas compartir. En consulta se integra el expediente clínico conforme a la normativa sanitaria aplicable.</p>
+      <h2>Para qué los usamos</h2>
+      <p>Para agendar y confirmar tu cita, darte seguimiento y, en su caso, emitir tu factura. No vendemos ni compartimos tus datos con terceros para fines comerciales.</p>
+      <h2>Tus derechos (ARCO)</h2>
+      <p>Puedes solicitar el acceso, rectificación, cancelación u oposición al uso de tus datos escribiendo a <a class="font-semibold text-brand-800 underline" href={`mailto:${p.contactEmail}`}>{p.contactEmail}</a>.</p>
+      <h2>Cambios a este aviso</h2>
+      <p>Cualquier cambio se publicará en esta página.</p>
+    </div>
+  </main>
+  <Footer />
+</Base>

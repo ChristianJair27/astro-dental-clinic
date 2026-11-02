@@ -1,0 +1,148 @@
+---
+import { site, treatmentOptions } from '../config/site';
+import { whatsappHref } from '../lib/links';
+import Icon from './Icon.astro';
+
+const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT || '/api/lead.php';
+const field =
+  'mt-1 block w-full rounded-xl border border-brand-200 bg-white px-4 py-3 text-base text-ink placeholder:text-muted focus:border-brand-700 focus:ring-2 focus:ring-brand-200 focus:outline-none';
+const label = 'font-medium text-ink';
+---
+
+<section id="cita" class="bg-gradient-to-b from-white to-brand-50 py-16 md:py-24" data-section="form">
+  <div class="container-page max-w-3xl">
+    <h2 class="section-title">{site.form.heading}</h2>
+    <p class="mt-3 text-muted">{site.form.sub}</p>
+
+    <form id="lead-form" action={endpoint} method="post" class="mt-8 grid gap-5 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-brand-100 sm:grid-cols-2 sm:p-8" novalidate>
+      <div>
+        <label for="f-name" class={label}>Nombre del paciente</label>
+        <input id="f-name" name="name" type="text" autocomplete="name" required maxlength="80" class={field} />
+      </div>
+      <div>
+        <label for="f-phone" class={label}>Teléfono / WhatsApp</label>
+        <input id="f-phone" name="phone" type="tel" autocomplete="tel" required inputmode="tel" pattern="[0-9+()\s\-]{8,20}" class={field} />
+      </div>
+      <div>
+        <label for="f-service" class={label}>Tratamiento</label>
+        <select id="f-service" name="service" class={field}>
+          {treatmentOptions.map((o) => <option value={o}>{o}</option>)}
+        </select>
+      </div>
+      <div>
+        <label for="f-time" class={label}>Horario preferido</label>
+        <select id="f-time" name="preferred_time" class={field}>
+          {site.form.timeOptions.map((o) => <option value={o}>{o}</option>)}
+        </select>
+      </div>
+      <div>
+        <label for="f-email" class={label}>Correo <span class="font-normal text-muted">(opcional)</span></label>
+        <input id="f-email" name="email" type="email" autocomplete="email" maxlength="120" class={field} />
+      </div>
+      <fieldset>
+        <legend class={label}>¿Es tu primera visita?</legend>
+        <div class="mt-2 flex gap-3">
+          <label class="flex min-h-12 flex-1 cursor-pointer items-center gap-2 rounded-xl border border-brand-200 px-4 has-checked:border-brand-700 has-checked:bg-brand-50">
+            <input type="radio" name="patient_type" value="Primera visita" checked class="size-4 accent-brand-700" /> Sí
+          </label>
+          <label class="flex min-h-12 flex-1 cursor-pointer items-center gap-2 rounded-xl border border-brand-200 px-4 has-checked:border-brand-700 has-checked:bg-brand-50">
+            <input type="radio" name="patient_type" value="Paciente actual" class="size-4 accent-brand-700" /> No
+          </label>
+        </div>
+      </fieldset>
+      <div class="sm:col-span-2">
+        <label for="f-message" class={label}>Motivo de la consulta <span class="font-normal text-muted">(opcional)</span></label>
+        <textarea id="f-message" name="message" rows="3" maxlength="1000" aria-describedby="f-message-hint" class={field}></textarea>
+        <p id="f-message-hint" class="mt-1 text-sm text-muted">{site.form.privacyNote}</p>
+      </div>
+      <div class="sm:col-span-2">
+        <label class="flex items-start gap-3 text-sm text-ink">
+          <input id="f-consent" name="consent" type="checkbox" value="1" required class="mt-0.5 size-5 shrink-0 accent-brand-700" />
+          <span>Acepto el <a href="/aviso-de-privacidad/" class="font-semibold text-brand-800 underline underline-offset-2">aviso de privacidad</a> y que me contacten para confirmar mi cita.</span>
+        </label>
+      </div>
+
+      <!-- Anti-spam: honeypot (humanos no lo ven) + tiempo mínimo de llenado. -->
+      <div class="absolute -left-[9999px]" aria-hidden="true">
+        <label for="f-website">No llenar este campo</label>
+        <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+      <input type="hidden" name="ts" value="" />
+      <input type="hidden" name="source" value="cita_form" />
+
+      <div class="flex flex-col gap-3 sm:col-span-2 sm:flex-row">
+        <button type="submit" class="btn bg-brand-700 text-white hover:bg-brand-800 disabled:opacity-60">
+          <Icon name="calendar" class="size-5" /> Solicitar cita
+        </button>
+        <a id="wa-form" href={whatsappHref()} target="_blank" rel="noopener" class="btn bg-whatsapp text-white hover:bg-whatsapp-hover">
+          <Icon name="whatsapp" class="size-5" /> Mejor por WhatsApp
+        </a>
+      </div>
+      <p id="form-status" role="status" aria-live="polite" class="hidden rounded-xl p-4 text-sm sm:col-span-2"></p>
+    </form>
+  </div>
+</section>
+
+<script define:vars={{ waFallback: whatsappHref(), waNumber: site.whatsapp, waTemplate: site.whatsappTemplate }}>
+  window.__waFallback = waFallback;
+  window.__wa = { number: waNumber, template: waTemplate };
+</script>
+
+<script>
+  import { track, trackAdsLead } from '../lib/analytics';
+
+  const form = document.getElementById('lead-form') as HTMLFormElement | null;
+  const status = document.getElementById('form-status');
+  const waLink = document.getElementById('wa-form') as HTMLAnchorElement | null;
+
+  function show(kind: 'ok' | 'error', html: string) {
+    if (!status) return;
+    status.className = `rounded-xl p-4 text-sm sm:col-span-2 ${kind === 'ok' ? 'bg-green-50 text-green-900' : 'bg-red-50 text-red-900'}`;
+    status.innerHTML = html;
+  }
+
+  if (form) {
+    const ts = form.elements.namedItem('ts') as HTMLInputElement;
+    const service = form.elements.namedItem('service') as HTMLSelectElement;
+    const time = form.elements.namedItem('preferred_time') as HTMLSelectElement;
+    ts.value = String(Date.now());
+
+    // El botón de WhatsApp arma el mensaje con el tratamiento y horario elegidos.
+    const updateWa = () => {
+      if (!waLink) return;
+      const { number, template } = (window as unknown as { __wa: { number: string; template: string } }).__wa;
+      const text = template.replace('{tratamiento}', service.value).replace('{horario}', time.value);
+      waLink.href = `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
+    };
+    service.addEventListener('change', updateWa);
+    time.addEventListener('change', updateWa);
+    updateWa();
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      const button = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+      button.disabled = true;
+      const data = new FormData(form);
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
+        const json = (await res.json().catch(() => ({}))) as { ok?: boolean };
+        if (!res.ok || !json.ok) throw new Error(String(res.status));
+        track('generate_lead', { service: String(data.get('service') ?? ''), source: String(data.get('source') ?? '') });
+        trackAdsLead();
+        form.reset();
+        updateWa();
+        show('ok', '¡Gracias! Recibimos tu solicitud. Te contactaremos para confirmar el día y la hora de tu cita.');
+      } catch {
+        const wa = (window as unknown as { __waFallback: string }).__waFallback;
+        show('error', `No pudimos enviar el formulario. Inténtalo de nuevo o <a class="font-semibold underline" href="${wa}" target="_blank" rel="noopener">escríbenos por WhatsApp</a>.`);
+      } finally {
+        button.disabled = false;
+        ts.value = String(Date.now());
+      }
+    });
+  }
+</script>

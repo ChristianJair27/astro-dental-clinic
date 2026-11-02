@@ -1,0 +1,15 @@
+---
+import { whatsappHref } from '../lib/links';
+import Icon from './Icon.astro';
+---
+
+<a
+  href={whatsappHref()}
+  target="_blank"
+  rel="noopener"
+  data-section="float"
+  class="fixed right-4 bottom-4 z-40 inline-flex size-14 items-center justify-center rounded-full bg-whatsapp text-white shadow-lg hover:bg-whatsapp-hover"
+>
+  <Icon name="whatsapp" class="size-7" />
+  <span class="sr-only">Escríbenos por WhatsApp</span>
+</a>

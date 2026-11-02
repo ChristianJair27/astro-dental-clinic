@@ -1,0 +1,57 @@
+---
+import { site } from '../config/site';
+import { whatsappHref, telHref } from '../lib/links';
+import Icon from './Icon.astro';
+
+const { hero, specialist } = site;
+const weekday = site.hours[0];
+---
+
+<section class="relative overflow-hidden bg-gradient-to-b from-brand-50 via-sand-50 to-white" data-section="hero">
+  <div aria-hidden="true" class="pointer-events-none absolute -top-32 -left-24 size-96 rounded-full bg-brand-100/70 blur-3xl"></div>
+  <div class="container-page relative grid gap-10 py-14 md:grid-cols-[1.25fr_1fr] md:items-center md:py-20">
+    <div>
+      <p class="mb-4 inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-sm font-medium text-brand-800 shadow-sm ring-1 ring-brand-100">
+        <Icon name="pin" class="size-4" /> {hero.eyebrow}
+      </p>
+      <h1 class="text-4xl font-bold tracking-tight text-brand-900 sm:text-5xl">{hero.heading}</h1>
+      <p class="mt-5 max-w-xl text-lg text-muted">{hero.sub}</p>
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <a href={whatsappHref()} target="_blank" rel="noopener" class="btn bg-whatsapp text-white shadow-sm hover:bg-whatsapp-hover">
+          <Icon name="whatsapp" class="size-5" /> {hero.primaryCta}
+        </a>
+        <a href="#cita" class="btn bg-white text-brand-800 ring-1 ring-brand-200 hover:bg-brand-50">
+          <Icon name="calendar" class="size-5" /> {hero.secondaryCta}
+        </a>
+      </div>
+      <p class="mt-5 text-sm text-muted">
+        ¿Prefieres llamar? <a href={telHref} class="font-semibold text-brand-800 underline underline-offset-2">{site.phone}</a>
+      </p>
+    </div>
+
+    <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-brand-100 sm:p-8">
+      <ul class="space-y-4">
+        {
+          hero.highlights.map((h) => (
+            <li class="flex gap-3 text-ink">
+              <span class="mt-0.5 inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-800">
+                <Icon name="check" class="size-4" />
+              </span>
+              {h}
+            </li>
+          ))
+        }
+      </ul>
+      <div class="mt-6 grid gap-3 border-t border-brand-100 pt-6 text-sm text-muted">
+        <p class="flex items-center gap-2">
+          <Icon name="clock" class="size-5 shrink-0 text-brand-700" />
+          <span>{weekday?.days}: {weekday?.open} – {weekday?.close}</span>
+        </p>
+        <p class="flex items-center gap-2">
+          <Icon name="badge" class="size-5 shrink-0 text-brand-700" />
+          <span>{specialist.name} · Céd. Prof. <strong class="font-semibold text-ink">{specialist.cedulaProfesional}</strong></span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

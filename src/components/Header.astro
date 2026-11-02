@@ -1,0 +1,53 @@
+---
+import { site } from '../config/site';
+import Icon from './Icon.astro';
+
+const nav = [
+  { href: '#tratamientos', label: 'Tratamientos' },
+  { href: '#especialista', label: 'Especialista' },
+  { href: '#primera-visita', label: 'Primera visita' },
+  { href: '#pagos', label: 'Pagos' },
+  { href: '#preguntas', label: 'Preguntas' },
+  { href: '#ubicacion', label: 'Ubicación' },
+];
+---
+
+<header class="sticky top-0 z-40 border-b border-brand-100 bg-white/95 backdrop-blur" data-section="header">
+  <div class="container-page flex h-16 items-center justify-between gap-4">
+    <a href="/" class="flex items-center gap-2 text-lg font-bold tracking-tight text-brand-900">
+      <span class="inline-flex size-9 items-center justify-center rounded-full bg-brand-700 text-white"><Icon name="tooth" class="size-5" /></span>
+      {site.name}
+    </a>
+
+    <nav aria-label="Principal" class="hidden lg:block">
+      <ul class="flex gap-6 text-sm font-medium text-muted">
+        {nav.map((item) => <li><a class="hover:text-brand-700" href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="#cita" class="btn hidden min-h-10 bg-brand-700 px-5 py-2 text-sm text-white hover:bg-brand-800 sm:inline-flex">
+        <Icon name="calendar" class="size-5" /> Agendar cita
+      </a>
+      <details class="relative lg:hidden">
+        <summary class="flex size-11 cursor-pointer list-none items-center justify-center rounded-lg text-muted hover:bg-brand-50 [&::-webkit-details-marker]:hidden">
+          <Icon name="menu" />
+          <span class="sr-only">Abrir menú</span>
+        </summary>
+        <nav aria-label="Móvil" class="absolute right-0 mt-2 w-60 rounded-2xl border border-brand-100 bg-white p-2 shadow-lg">
+          <ul>
+            {nav.map((item) => <li><a class="block rounded-lg px-3 py-3 text-ink hover:bg-brand-50" href={item.href}>{item.label}</a></li>)}
+            <li><a class="mt-1 block rounded-lg bg-brand-700 px-3 py-3 font-semibold text-white" href="#cita">Agendar cita</a></li>
+          </ul>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Cierra el menú móvil al elegir una sección.
+  document.querySelectorAll('header details a').forEach((a) =>
+    a.addEventListener('click', () => a.closest('details')?.removeAttribute('open')),
+  );
+</script>

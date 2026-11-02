@@ -1,0 +1,22 @@
+---
+import { site } from '../config/site';
+import { telHref, mailHref } from '../lib/links';
+
+const year = new Date().getFullYear();
+const { specialist: s } = site;
+---
+
+<footer class="border-t border-brand-100 py-10 pb-24 text-sm text-muted md:pb-10" data-section="footer">
+  <div class="container-page flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+    <div class="space-y-1">
+      <p>© {year} {site.legalName}. Todos los derechos reservados.</p>
+      <p>Responsable sanitario: {s.name}, {s.title}. Cédula profesional {s.cedulaProfesional}.</p>
+    </div>
+    <ul class="flex flex-wrap gap-x-6 gap-y-2">
+      <li><a class="hover:text-brand-800" href={telHref}>{site.phone}</a></li>
+      <li><a class="hover:text-brand-800" href={mailHref}>{site.email}</a></li>
+      <li><a class="hover:text-brand-800" href="/aviso-de-privacidad/">Aviso de privacidad</a></li>
+      {site.social.map((s) => <li><a class="hover:text-brand-800" href={s.href} rel="noopener" target="_blank">{s.label}</a></li>)}
+    </ul>
+  </div>
+</footer>

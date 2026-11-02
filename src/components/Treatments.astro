@@ -1,0 +1,36 @@
+---
+import { site } from '../config/site';
+import { whatsappHref, appointmentMessage } from '../lib/links';
+import Icon from './Icon.astro';
+---
+
+<section id="tratamientos" class="py-16 md:py-24" data-section="treatments">
+  <div class="container-page">
+    <h2 class="section-title">Tratamientos</h2>
+    <p class="mt-3 max-w-2xl text-muted">{site.treatmentsIntro}</p>
+    <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        site.treatments.map((t) => (
+          <li class="flex flex-col rounded-3xl border border-brand-100 bg-white p-6 transition-shadow hover:shadow-md">
+            <div class="flex items-start justify-between gap-3">
+              <span class="inline-flex size-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-700">
+                <Icon name={t.icon} />
+              </span>
+              {t.detail && <span class="rounded-full bg-sand-100 px-3 py-1 text-xs font-medium text-muted">{t.detail}</span>}
+            </div>
+            <h3 class="mt-4 text-lg font-bold text-brand-900">{t.title}</h3>
+            <p class="mt-2 flex-1 text-muted">{t.description}</p>
+            <a
+              href={whatsappHref(appointmentMessage(t.title))}
+              target="_blank"
+              rel="noopener"
+              class="mt-5 inline-flex items-center gap-1 self-start text-sm font-semibold text-brand-800 underline-offset-4 hover:underline"
+            >
+              Agendar {t.title.toLowerCase()} <Icon name="arrow" class="size-4" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
