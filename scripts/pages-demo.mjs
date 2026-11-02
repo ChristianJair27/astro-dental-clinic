@@ -30,6 +30,9 @@ let count = 0
 for await (const file of htmlFiles(dist)) {
   let html = await readFile(file, 'utf8')
   html = html.replace(rootRelative, `$1${prefix}`).replace(absoluteOrigin, `${origin}${baseName}`)
+  // Internal "fill me in" markers read better as a plain note in a public demo
+  const english = /<html[^>]*lang="en/.test(html)
+  html = html.replaceAll('TODO-CLIENTE', english ? 'client to provide' : 'dato del cliente')
   html = html.replace(/<meta name="robots"[^>]*>/g, '')
   html = html.replace('</head>', '<meta name="robots" content="noindex, nofollow"></head>')
   html = html.replace(/<body([^>]*)>/, `<body$1>${badge}`)
